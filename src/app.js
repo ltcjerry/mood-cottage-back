@@ -5,9 +5,12 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
+const session = require('koa-generic-session')
+const redisStore = require('koa-redis')
 
 const index = require('./routes/index')
 const users = require('./routes/users')
+const { REDIS_CONF } = require('./config/database')
 
 // error handler
 onerror(app)
@@ -24,13 +27,23 @@ app.use(views(__dirname + '/views', {
   extension: 'ejs'
 }))
 
+// session 配置
+app.keys = ['@jerry_ltc$']
+app.use(session({
+  key: 'blog.sid', // cookie name 默认是 `koa.sid`
+  prefix: 'blog:sess:', // redis key的前缀 默认是 `koa:sess:`
+  cookie: { path: '/', httpOnly: true, maxAge: 24 * 60 * 60 * 1000 },
+  store: redisStore({ all: `${REDIS_CONF.host}:${REDIS_CONF.port}` })
+}))
+
+
 // logger
-app.use(async (ctx, next) => {
-  const start = new Date()
-  await next()
-  const ms = new Date() - start
-  console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
-})
+// app.use(async (ctx, next) => {
+//   const start = new Date()
+//   await next()
+//   const ms = new Date() - start
+//   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
+// })
 
 // routes
 app.use(index.routes(), index.allowedMethods())
