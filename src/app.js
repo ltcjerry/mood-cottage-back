@@ -8,12 +8,24 @@ const logger = require('koa-logger')
 const session = require('koa-generic-session')
 const redisStore = require('koa-redis')
 
-const index = require('./routes/index')
-const users = require('./routes/users')
+// token密钥、jwt配置,本项目暂不使用
+// const koaJwt = require('koa-jwt')
+// const { SECRET } = require('./config/constant')
+// app.use(koaJwt({
+//     secret: SECRET
+// }).unless({
+//     path: [/^\/users\/login/] //忽略部分目录jwt验证
+// }))
+
+// 路由
+const userAPIRouter = require('./routes/api/user')
+const errorViewRouter = require('./routes/view/error')
+
+// redis
 const { REDIS_CONF } = require('./config/database')
 
 // error handler
-onerror(app)
+onerror(app, { redirect: '/error'})
 
 // middlewares
 app.use(bodyparser({
@@ -36,18 +48,9 @@ app.use(session({
     store: redisStore({ all: `${REDIS_CONF.host}:${REDIS_CONF.port}` })
 }))
 
-
-// logger
-// app.use(async (ctx, next) => {
-//   const start = new Date()
-//   await next()
-//   const ms = new Date() - start
-//   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
-// })
-
 // routes
-app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
+app.use(userAPIRouter.routes(), userAPIRouter.allowedMethods())
+app.use(errorViewRouter.routes(), errorViewRouter.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

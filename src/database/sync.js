@@ -3,7 +3,9 @@
  * @author jerry
  */
 
-const seq = require('./seq')
+const seq = require('./sequlize')
+
+require('./model/index')
 
 // 测试连接数据库
 seq.authenticate().then(() => {
