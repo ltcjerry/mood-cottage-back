@@ -15,5 +15,9 @@ module.exports = {
     registerFailInfo: {
         code: 1003,
         message: '注册失败,请重试'
+    },
+    jsonSchemaFailInfo: {
+        code: 1004,
+        message: '数据格式校验错误'
     }
 }
