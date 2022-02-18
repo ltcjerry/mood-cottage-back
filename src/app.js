@@ -8,11 +8,11 @@ const logger = require('koa-logger')
 const session = require('koa-generic-session')
 const redisStore = require('koa-redis')
 
-// token密钥、jwt配置,本项目暂不使用
+// token密钥、jwt配置, 暂不使用
 // const koaJwt = require('koa-jwt')
-// const { SECRET } = require('./config/constant')
+// const { TOKEN_SECRET_KEY } = require('./config/constant')
 // app.use(koaJwt({
-//     secret: SECRET
+//     secret: TOKEN_SECRET_KEY
 // }).unless({
 //     path: [/^\/users\/login/] //忽略部分目录jwt验证
 // }))
@@ -23,6 +23,7 @@ const errorViewRouter = require('./routes/view/error')
 
 // redis
 const { REDIS_CONF } = require('./config/database')
+const { SESSION_SECRET_key } = require('./config/constant')
 
 // error handler
 onerror(app, { redirect: '/error'})
@@ -40,7 +41,7 @@ app.use(views(__dirname + '/views', {
 }))
 
 // session 配置
-app.keys = ['@jerry_ltc$']
+app.keys = [SESSION_SECRET_key]
 app.use(session({
     key: 'blog.sid', // cookie name 默认是 `koa.sid`
     prefix: 'blog:sess:', // redis key的前缀 默认是 `koa:sess:`

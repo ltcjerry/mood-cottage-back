@@ -2,7 +2,7 @@ const router = require('koa-router')()
 const jwt = require('jsonwebtoken')
 const util = require('util')
 const verify = util.promisify(jwt.verify)
-const { SECRET } = require('../../config/constant')
+const { TOKEN_SECRET_KEY } = require('../../config/constant')
 
 router.prefix('/users')
 
@@ -10,7 +10,7 @@ router.post('/login', function (ctx, next) {
     const { username, password } = ctx.request.body
     const userInfo = null
     if (userInfo) {
-        const token = jwt.sign(userInfo, SECRET, { expiresIn: '1h' })
+        const token = jwt.sign(userInfo, TOKEN_SECRET_KEY, { expiresIn: '1h' })
         ctx.body = {
             status: 'success',
             data: token
@@ -27,7 +27,7 @@ router.post('/login', function (ctx, next) {
 router.get('/getUserInfo', async (ctx, next) => {
     const token = ctx.header.authorization
     try {
-        const payload = await verify(token.split(' ')[1], SECRET)
+        const payload = await verify(token.split(' ')[1], TOKEN_SECRET_KEY)
         ctx.body = {
             code: 200,
             data: payload
