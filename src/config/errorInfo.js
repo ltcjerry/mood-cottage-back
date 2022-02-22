@@ -32,4 +32,8 @@ module.exports = {
         code: 1007,
         message: '测试环境删除用户失败'
     },
+    uploadFileSizeFailInfo: {
+        code: 1008,
+        message: '上传文件体积过大'
+    }
 }
