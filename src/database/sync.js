@@ -9,15 +9,15 @@ require('./model/index')
 
 // 测试连接数据库
 seq.authenticate().then(() => {
-    console.log('link database success')
+    //link database success
 }).catch(() => {
-    console.log('link database fail')
+    //link database fail
 })
 
 // 同步model到database
 seq.sync({ force: true }).then(() => {
-    console.log('sync model sucess')
+    //sync model sucess
     process.exit()
 }).catch(() => {
-    console.log('sync model fail')
+    //sync model fail
 })

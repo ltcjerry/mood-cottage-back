@@ -13,7 +13,7 @@ const User = seq.define('user', {
         unique: true,
         coment: '用户名 唯一'
     },
-    userName: {
+    password: {
         type: STRING,
         allowNull: false,
         coment: '密码'
@@ -32,18 +32,6 @@ const User = seq.define('user', {
     avatar: {
         type: STRING,
         comment: '头像、图片地址'
-    },
-    readCount: {
-        type: DECIMAL,
-        allowNull: false,
-        defaultValue: 0,
-        coment: '文章阅读数'
-    },
-    likeCount: {
-        type: DECIMAL,
-        allowNull: false,
-        defaultValue: 0,
-        coment: '文章点赞数'
     }
 })
 

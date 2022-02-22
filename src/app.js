@@ -7,6 +7,7 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const session = require('koa-generic-session')
 const redisStore = require('koa-redis')
+const cors = require('koa2-cors')
 
 // token密钥、jwt配置, 暂不使用
 // const koaJwt = require('koa-jwt')
@@ -27,6 +28,9 @@ const { SESSION_SECRET_key } = require('./config/constant')
 
 // error handler
 onerror(app, { redirect: '/error'})
+
+// cors
+app.use(cors())
 
 // middlewares
 app.use(bodyparser({

@@ -3,12 +3,14 @@
  * @author jerry
  */
 
-const { getUserInfo, createUser } = require('../service/user')
 const { SuccessModel, FailModel } = require('../utils/resModel')
+const { getUserInfo, createUser, deleteUser } = require('../service/user')
 const { 
+    loginFailInfo, 
     registerFailInfo,
+    deleteUserFailInfo,
     registerUserNameExistInfo, 
-    registerUserNameNotExistInfo, 
+    registerUserNameNotExistInfo,
 } = require('../config/errorInfo')
 const doCrypto = require('../utils/crypto')
 
@@ -31,21 +33,51 @@ async function isExist(userName) {
  *  @param {string} password 密码
  * @param {number} gender 性别(0:保密 1:男性 2:女性)
  */
-async function register({ userName, passowrd, gender }) {
+async function register({ userName, password, gender }) {
     const userInfo = await getUserInfo(userName)
     if (userInfo) {
         return new FailModel(registerUserNameExistInfo)
     } else {
         try {
-            await createUser({ userName, passowrd: doCrypto(passowrd), gender })
+            await createUser({ userName, password: doCrypto(password), gender })
             return new SuccessModel()
         } catch (error) {
+            console.error(error.message, error.stack)
             return new FailModel(registerFailInfo)
         }
     }
 }
 
+/**
+ * 登录
+ * @param {Object} ctx koa2 ctx
+ * @param {string} userName 用户名
+ * @param {string} password 密码
+ */
+async function login(ctx, userName, password) {
+    const userInfo = await getUserInfo(userName, doCrypto(password))
+    if (userInfo) {
+        if (ctx.session.userInfo == null) {
+            ctx.session.userInfo = userInfo
+        }
+        return new SuccessModel()
+    } else {
+        return new FailModel(loginFailInfo)
+    }
+}
+
+/**
+ * 测试环境下删除当前用户
+ * @param {string} userName 当前用户名
+ */
+async function deleteCurUser(userName) {
+    const result = await deleteUser(userName)
+    return result ? new SuccessModel() : FailModel(deleteUserFailInfo)
+}
+
 module.exports = {
+    login,
     isExist,
     register,
+    deleteCurUser,
 }

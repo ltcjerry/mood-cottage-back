@@ -3,17 +3,20 @@
  * @author jerry
  */
 
-const { isExist, register } = require('../../controller/user')
-const { genValidator } = require('../../middlewares/validator')
+const { isTest } = require('../../utils/env')
 const userValidate = require('../../validator/user')
+const { genValidator } = require('../../middlewares/validator')
+const { loginCheck } = require('../../middlewares/login-check')
+const { login, isExist, register, deleteCurUser } = require('../../controller/user')
 
 const router = require('koa-router')()
 
 router.prefix('/api/user')
 
 // login
-router.get('/login', async(ctx, next) => {
-   
+router.post('/login', async(ctx, next) => {
+    const { userName, password } = ctx.request.body
+    ctx.body = await login(ctx, userName, password)
 })
  
 // register
@@ -26,6 +29,14 @@ router.post('/register', genValidator(userValidate), async(ctx, next) => {
 router.post('/isExist', async(ctx, next) => {
     const { userName } = ctx.request.body
     ctx.body = await isExist(userName)
+})
+
+// 删除（仅测试环境下有效)
+router.post('/delete', loginCheck, async (ctx, next) => {
+    if (isTest) {
+        const { userName } = ctx.session.userInfo
+        ctx.body = await deleteCurUser(userName)
+    }
 })
  
 module.exports = router

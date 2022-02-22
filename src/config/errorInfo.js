@@ -19,5 +19,17 @@ module.exports = {
     jsonSchemaFailInfo: {
         code: 1004,
         message: '数据格式校验错误'
-    }
+    },
+    loginFailInfo: {
+        code: 1005,
+        message: '登录失败'
+    },
+    loginCheckFailInfo: {
+        code: 1006,
+        message: '你尚未登录'
+    },
+    deleteUserFailInfo: {
+        code: 1007,
+        message: '测试环境删除用户失败'
+    },
 }
