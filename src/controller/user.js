@@ -4,11 +4,17 @@
  */
 
 const { SuccessModel, FailModel } = require('../utils/resModel')
-const { getUserInfo, createUser, deleteUser } = require('../service/user')
+const { 
+    createUser, 
+    deleteUser, 
+    updateUser, 
+    getUserInfo, 
+} = require('../service/user')
 const { 
     loginFailInfo, 
     registerFailInfo,
     deleteUserFailInfo,
+    updateUserFailInfo,
     registerUserNameExistInfo, 
     registerUserNameNotExistInfo,
 } = require('../config/errorInfo')
@@ -75,9 +81,28 @@ async function deleteCurUser(userName) {
     return result ? new SuccessModel() : FailModel(deleteUserFailInfo)
 }
 
+/**
+ * 
+ * @param {Object} ctx koa2 ctx
+ * @param {Object} param 用户信息
+ */
+async function changeInfo(ctx, { nickName, avatar }) {
+    const { userName } = ctx.session.userInfo
+    nickName = nickName || userName
+    const infoData = { newNickName: nickName, newAvatar: avatar }
+    const result = await updateUser({ userName }, infoData)
+    if (result) {
+        Object.assign(ctx.session.userInfo, { nickName, avatar })
+        return new SuccessModel()
+    } else {
+        return new FailModel(updateUser)
+    }
+}
+
 module.exports = {
     login,
     isExist,
     register,
+    changeInfo,
     deleteCurUser,
 }

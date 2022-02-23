@@ -35,5 +35,9 @@ module.exports = {
     uploadFileSizeFailInfo: {
         code: 1008,
         message: '上传文件体积过大'
+    },
+    updateUserFailInfo: {
+        code: 1009,
+        message: '修改用户信息失败'
     }
 }

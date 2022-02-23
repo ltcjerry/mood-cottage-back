@@ -49,8 +49,35 @@ async function deleteUser(userName) {
     return result > 0
 }
 
+/**
+ * 修改用户信息
+ * @param {object} condition 查询条件
+ * @param {*} userInfo 修改内容
+ */
+async function updateUser(condition, userInfo) {
+    const { userName, password } = condition
+    const { newPassword, newNickName, newAvatar } = userInfo
+    const updateData = {}
+    if (newPassword) {
+        updateData.password = newPassword
+    }
+    if (newNickName) {
+        updateData.nickName = newNickName
+    }
+    if (newAvatar) {
+        updateData.avatar = newAvatar
+    }
+    const queryData = { userName }
+    if (password) {
+        queryData.password = password
+    }
+    const result = await User.update(updateData, { where: queryData })
+    return result[0] > 0
+}
+
 module.exports = {
     createUser,
     deleteUser,
+    updateUser,
     getUserInfo,
 }
