@@ -5,8 +5,8 @@
 
 const server = require('../server')
 
-const userName = 'other'
-const password = '123456'
+const userName = `u_${Date.now()}`
+const password = `p_${Date.now()}`
 const testUser = {
     userName,
     password,
@@ -51,9 +51,36 @@ test('已注册用户登录，预期成功', async () => {
     COOKIE = res.headers['set-cookie'].join(';')
 })
 
+// 修改用户信息
+test('修改用户信息，预期成功', async () => {
+    const res = await server
+    .patch('/api/user/changeInfo')
+    .send({
+        nickName: '测试昵称',
+        avatar: '测试头像'
+    })
+    .set('cookie', COOKIE)
+    expect(res.body.code).toBe(0) 
+})
+
+// 修改密码
+test('修改密码，预期成功', async () => {
+    const res = await server
+    .patch('/api/user/changePassword')
+    .send({password, newPassword: `p_${Date.now()}`})
+    .set('cookie', COOKIE)
+    expect(res.body.code).toBe(0) 
+})
+
 // 用户删除
-test('已注册用户登录，预期成功', async () => {
+test('删除用户，预期成功', async () => {
     const res = await server.post('/api/user/delete').set('cookie', COOKIE)
+    expect(res.body.code).toBe(0) 
+})
+
+// 退出登录
+test('退出登录，预期成功', async () => {
+    const res = await server.post('/api/user/logout').set('cookie', COOKIE)
     expect(res.body.code).toBe(0) 
 })
 
