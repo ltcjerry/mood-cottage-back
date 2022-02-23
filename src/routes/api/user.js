@@ -9,10 +9,12 @@ const { genValidator } = require('../../middlewares/validator')
 const { loginCheck } = require('../../middlewares/login-check')
 const { 
     login, 
+    logout, 
     isExist, 
     register,
     changeInfo,
-    deleteCurUser, 
+    deleteCurUser,
+    changePassword,
 } = require('../../controller/user')
 
 const router = require('koa-router')()
@@ -46,10 +48,21 @@ router.post('/delete', loginCheck, async (ctx, next) => {
 })
 
 // 修改个人信息
-router.patch('/updateInfo', loginCheck, genValidator(userValidate), async (ctx, next) => {
+router.patch('/changeInfo', loginCheck, genValidator(userValidate), async (ctx, next) => {
     const { userName, avatar } = ctx.request.body
     ctx.body = await changeInfo(ctx, { userName, avatar })
 })
- 
+
+// 修改密码
+router.patch('/changePassword', loginCheck, genValidator(userValidate), async (ctx, next) => {
+    const { userName } = ctx.session.userInfo
+    const { password, newPassword } = ctx.request.body
+    ctx.body = await changePassword(userName, password, newPassword)
+})
+
+// 退出登录
+router.post('/logout', loginCheck, async (ctx, next) => {
+    ctx.body = await logout(ctx)
+})
+
 module.exports = router
- 

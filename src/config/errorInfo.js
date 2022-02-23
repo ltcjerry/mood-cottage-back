@@ -39,5 +39,9 @@ module.exports = {
     updateUserFailInfo: {
         code: 1009,
         message: '修改用户信息失败'
+    },
+    changePasswordFailInfo: {
+        code: 1010,
+        message: '修改用户密码失败'
     }
 }

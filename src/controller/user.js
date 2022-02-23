@@ -15,6 +15,7 @@ const {
     registerFailInfo,
     deleteUserFailInfo,
     updateUserFailInfo,
+    changePasswordFailInfo,
     registerUserNameExistInfo, 
     registerUserNameNotExistInfo,
 } = require('../config/errorInfo')
@@ -99,10 +100,32 @@ async function changeInfo(ctx, { nickName, avatar }) {
     }
 }
 
+/**
+ * 
+ * @param {string} userName 用户名
+ * @param {string} password 旧密码
+ * @param {string} newPassword 新密码
+ */
+async function changePassword(userName, password, newPassword) {
+    const result = await updateUser({userName, password: doCrypto(password)}, {newPassword: doCrypto(newPassword)})
+    return result ? new SuccessModel() : new FailModel(changePasswordFailInfo)
+}
+
+/**
+ * 用户退出登录
+ * @param {Object} ctx koa2 ctx
+ */
+async function logout(ctx) {
+    delete ctx.session.userInfo
+    return new SuccessModel()
+}
+
 module.exports = {
     login,
+    logout,
     isExist,
     register,
     changeInfo,
     deleteCurUser,
+    changePassword,
 }
