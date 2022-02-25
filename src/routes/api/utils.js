@@ -3,7 +3,6 @@
  * @author jerry
  */
 
-const { isTest } = require('../../utils/env')
 const koaForm = require('formidable-upload-koa')
 const { loginCheck } = require('../../middlewares/login-check')
 const { saveFile } = require('../../controller/utils')

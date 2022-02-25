@@ -31,7 +31,8 @@
     "koa2-cors": "^2.0.6",
     "mysql2": "^2.3.3",
     "redis": "^4.0.3",
-    "sequelize": "^6.16.1"
+    "sequelize": "^6.16.1",
+    "xss": "^1.0.10"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.17.0",

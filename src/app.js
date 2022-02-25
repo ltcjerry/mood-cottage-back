@@ -21,6 +21,7 @@ const koaStatic = require('koa-static')
 // }))
 
 // 路由
+const blogAPIRouter = require('./routes/api/blog')
 const utilsAPIRouter = require('./routes/api/utils')
 const userAPIRouter = require('./routes/api/user')
 const errorViewRouter = require('./routes/view/error')
@@ -58,6 +59,7 @@ app.use(session({
 }))
 
 // routes
+app.use(blogAPIRouter.routes(), blogAPIRouter.allowedMethods())
 app.use(utilsAPIRouter.routes(), utilsAPIRouter.allowedMethods())
 app.use(userAPIRouter.routes(), userAPIRouter.allowedMethods())
 app.use(errorViewRouter.routes(), errorViewRouter.allowedMethods())
