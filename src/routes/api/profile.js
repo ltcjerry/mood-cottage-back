@@ -14,3 +14,10 @@ router.get('/:userName', loginCheck, async (ctx, next) => {
     const { userName: curUserName } = ctx.params
     ctx.body = await getProfileBlogList(curUserName, 0)
 })
+
+// 加载更多
+router.get('/loadMore/:userName/:page', loginCheck, async (ctx, next) => {
+    let { userName, page } = ctx.params
+    page = parseInt(page)
+    ctx.body = await getProfileBlogList(userName, page)
+})
